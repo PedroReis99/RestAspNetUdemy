@@ -5,8 +5,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RestWithASPNETUdemy.Model.Context;
-using RestWithASPNETUdemy.Services;
-using RestWithASPNETUdemy.Services.Implementations;
+using RestWithASPNETUdemy.Business;
+using RestWithASPNETUdemy.Business.Implementations;
+using RestWithASPNETUdemy.Repository;
+using RestWithASPNETUdemy.Repository.Implementations;
 
 namespace RestWithASPNETUdemy
 {
@@ -27,8 +29,12 @@ namespace RestWithASPNETUdemy
             var connection = Configuration["MySqlConnection:MySqlConnectionString"];
             services.AddDbContext<MySqlContext>(options => options.UseMySql(connection));
 
+            //Versionamento da API
+            services.AddApiVersioning();
+
             //Injeção de dependencia.
-            services.AddScoped<IPersonService, PersonSerivceImplementation>();
+            services.AddScoped<IPersonBusiness, PersonBusinessImplementation>();//Valida as regras de negocios
+            services.AddScoped<IPersonRepository, PersonRepositoryImplementation>();//Realiza o save na base de dados.
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
